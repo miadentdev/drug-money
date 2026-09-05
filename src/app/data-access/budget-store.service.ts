@@ -74,6 +74,14 @@ export class BudgetStore {
     );
   }
 
+  async exportSnapshot() {
+    const [budgets, transactions] = await Promise.all([
+      this.db.budgets.toArray(),
+      this.db.transactions.toArray(),
+    ]);
+    return { budgets, transactions };
+  }
+
   async createBudget(name: string, initialAmountText?: string) {
     const trimmedAmount = initialAmountText?.trim() ?? '';
     const parsedInitialCents = trimmedAmount ? centsFromAmountInput(trimmedAmount) : 0;

@@ -13,7 +13,7 @@ import { BudgetStore } from '../data-access/budget-store.service';
   imports: [ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, RouterLink],
   template: `
     <section class="page-card">
-      <a class="back-link" mat-button routerLink="/budgets"><mat-icon>←</mat-icon> Cancel</a>
+      <a class="back-link" mat-button routerLink="/budgets"><mat-icon>&lt;</mat-icon> Cancel</a>
       <mat-card class="form-card">
         <mat-card-header>
           <div class="form-heading">
@@ -43,7 +43,7 @@ import { BudgetStore } from '../data-access/budget-store.service';
             @if (error()) {
               <p class="error">{{ error() }}</p>
             }
-            <button class="submit-button" mat-flat-button color="primary" type="submit"><mat-icon>{{ mode() === 'remove' ? '↙' : '↗' }}</mat-icon> {{ actionLabel() }}</button>
+            <button class="submit-button" mat-flat-button color="primary" type="submit"><mat-icon>{{ mode() === 'remove' ? '-' : '+' }}</mat-icon> {{ actionLabel() }}</button>
           </form>
         </mat-card-content>
       </mat-card>

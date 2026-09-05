@@ -47,6 +47,12 @@ mat-icon { font-weight: 700; }
 .eyebrow { color: #b66b36; font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
 .hero h1 { margin: .55rem 0 .65rem; color: #173b2d; font-size: clamp(2.3rem, 7vw, 4.3rem); letter-spacing: -.075em; line-height: .98; }
 .hero-copy { max-width: 32rem; margin: 0; color: #607168; font-size: 1rem; line-height: 1.6; }
+.drive-button { margin-top: 1.2rem; border-color: rgba(23,59,45,.22) !important; color: #285b46 !important; }
+.drive-button mat-icon { margin-right: .35rem; font-size: 18px; vertical-align: middle; }
+.drive-error, .drive-success { display: flex; align-items: center; gap: .35rem; margin: .8rem 0 0; font-size: .78rem; }
+.drive-error { color: #a23f36; }
+.drive-success { color: #397557; }
+.drive-success a { font-weight: 800; text-decoration: underline; }
 .empty-state, .budget-card-surface, .balance-card, .history-card, .form-card { border: 1px solid rgba(23, 59, 45, .09); border-radius: 24px !important; box-shadow: 0 18px 45px rgba(30, 62, 48, .08) !important; background: rgba(255,255,255,.82) !important; }
 .empty-state { display: flex; align-items: center; text-align: center; padding: 3.5rem 1.5rem; }
 .empty-icon { display: grid; place-items: center; width: 68px; height: 68px; margin-bottom: 1rem; border-radius: 22px; color: #b66b36; background: #f7e8d8; }

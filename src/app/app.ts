@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
     <div class="app-shell">
       <mat-toolbar class="app-toolbar">
         <a class="brand" routerLink="/budgets" aria-label="Drug Money home">
-          <span class="brand-mark"><mat-icon aria-hidden="true">▣</mat-icon></span>
+          <span class="brand-mark"><mat-icon aria-hidden="true">[]</mat-icon></span>
           <span class="brand-name">Drug Money</span>
         </a>
         <span class="toolbar-spacer"></span>

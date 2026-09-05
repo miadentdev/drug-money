@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { BudgetStore } from '../data-access/budget-store.service';
+import { GoogleDriveService } from '../integrations/google-drive.service';
 
 @Component({
   standalone: true,
@@ -15,10 +16,13 @@ import { BudgetStore } from '../data-access/budget-store.service';
         <p class="eyebrow">Your money, your rules</p>
         <h1>Budgets</h1>
         <p class="hero-copy">Simple pockets for the money you want to keep track of.</p>
+        <button class="drive-button" mat-stroked-button type="button" (click)="uploadToDrive()" [disabled]="drive.isUploading()"><mat-icon>cloud_upload</mat-icon> {{ drive.isUploading() ? 'Uploading...' : 'Upload to Google Drive' }}</button>
+        @if (drive.error()) { <p class="drive-error">{{ drive.error() }}</p> }
+        @if (drive.uploadedFileUrl()) { <p class="drive-success"><mat-icon>check</mat-icon> Uploaded. <a [href]="drive.uploadedFileUrl()" target="_blank" rel="noreferrer">Open in Drive</a></p> }
       </div>
       @if (budgets().length === 0) {
         <mat-card class="empty-state">
-          <div class="empty-icon"><mat-icon>◒</mat-icon></div>
+          <div class="empty-icon"><mat-icon>o</mat-icon></div>
           <h2>No budgets yet</h2>
           <p>Create your first pocket and start building a clearer picture of your spending.</p>
           <a mat-flat-button color="primary" routerLink="/budgets/new"><mat-icon>+</mat-icon> Create budget</a>
@@ -37,7 +41,7 @@ import { BudgetStore } from '../data-access/budget-store.service';
                   </div>
                   <strong class="budget-total">{{ budget.total / 100 | currency:'EUR':'symbol':'1.2-2' }}</strong>
                 </div>
-                <mat-icon class="card-arrow">→</mat-icon>
+                <mat-icon class="card-arrow">&gt;</mat-icon>
               </mat-card>
             </a>
           }
@@ -51,5 +55,8 @@ import { BudgetStore } from '../data-access/budget-store.service';
 })
 export class BudgetsListComponent {
   private readonly store = inject(BudgetStore);
+  readonly drive = inject(GoogleDriveService);
   readonly budgets = this.store.summaries;
+
+  uploadToDrive() { void this.drive.uploadDatabase(); }
 }
