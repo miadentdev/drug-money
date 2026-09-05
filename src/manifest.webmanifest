@@ -1,0 +1,16 @@
+{
+  "name": "Drug Money",
+  "short_name": "Drug Money",
+  "theme_color": "#20549a",
+  "background_color": "#eef3f9",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/budgets",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,12 +1,22 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  imports: [RouterOutlet, MatToolbarModule, MatIconModule],
+  template: `
+    <div class="app-shell">
+      <mat-toolbar color="primary" class="app-toolbar">
+        <mat-icon aria-hidden="true">account_balance_wallet</mat-icon>
+        <span>Drug Money</span>
+      </mat-toolbar>
+      <main class="app-main">
+        <router-outlet />
+      </main>
+    </div>
+  `,
+  styleUrl: './app.scss',
 })
-export class App {
-  protected readonly title = signal('drug-money');
-}
+export class App {}
