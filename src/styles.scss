@@ -1,8 +1,8 @@
 :root {
   color-scheme: light;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #eef3f9;
-  color: #16202d;
+  font-family: 'Manrope', system-ui, sans-serif;
+  background: #f6f7f2;
+  color: #17251f;
 }
 
 html, body {
@@ -23,7 +23,78 @@ button, input {
   font: inherit;
 }
 
+mat-icon { font-weight: 700; }
+
 .page-card, .detail-layout, .list-layout {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
+}
+
+.app-toolbar {
+  background: rgba(246, 247, 242, .86) !important;
+  color: #17251f !important;
+  border-bottom: 1px solid rgba(23, 37, 31, .08);
+  backdrop-filter: blur(18px);
+}
+.brand { display: inline-flex; align-items: center; gap: .7rem; font-weight: 800; letter-spacing: -.03em; }
+.brand-mark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; color: #f6f7f2; background: #173b2d; }
+.brand-mark mat-icon { font-size: 20px; }
+.toolbar-spacer { flex: 1; }
+.offline-status { display: inline-flex; align-items: center; gap: .45rem; color: #607168; font-size: .72rem; font-weight: 700; letter-spacing: .03em; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #73b89a; box-shadow: 0 0 0 4px rgba(115,184,154,.16); }
+.app-main { max-width: 1120px; margin: auto; padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1rem, 4vw, 2.5rem) 6rem; }
+.hero { margin: 1rem 0 2.2rem; }
+.eyebrow { color: #b66b36; font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.hero h1 { margin: .55rem 0 .65rem; color: #173b2d; font-size: clamp(2.3rem, 7vw, 4.3rem); letter-spacing: -.075em; line-height: .98; }
+.hero-copy { max-width: 32rem; margin: 0; color: #607168; font-size: 1rem; line-height: 1.6; }
+.empty-state, .budget-card-surface, .balance-card, .history-card, .form-card { border: 1px solid rgba(23, 59, 45, .09); border-radius: 24px !important; box-shadow: 0 18px 45px rgba(30, 62, 48, .08) !important; background: rgba(255,255,255,.82) !important; }
+.empty-state { display: flex; align-items: center; text-align: center; padding: 3.5rem 1.5rem; }
+.empty-icon { display: grid; place-items: center; width: 68px; height: 68px; margin-bottom: 1rem; border-radius: 22px; color: #b66b36; background: #f7e8d8; }
+.empty-state h2 { margin: 0 0 .55rem; color: #173b2d; letter-spacing: -.04em; }
+.empty-state p { max-width: 27rem; margin: 0 auto 1.5rem; color: #607168; line-height: 1.55; }
+.empty-state a mat-icon, .actions mat-icon, .submit-button mat-icon { font-size: 18px; vertical-align: middle; }
+.budget-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1rem; }
+.budget-card { display: block; transition: transform .2s ease, filter .2s ease; }
+.budget-card:hover { transform: translateY(-3px); filter: brightness(.99); }
+.budget-card-surface { position: relative; overflow: hidden; padding: 1.35rem !important; }
+.card-accent { width: 42px; height: 5px; margin-bottom: 1.4rem; border-radius: 10px; background: #d7864b; }
+.budget-row { display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
+.card-label, .balance-label { color: #8a9b90; font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.budget-row h2 { margin: .35rem 0 .3rem; color: #173b2d; letter-spacing: -.035em; }
+.budget-row p { margin: 0; color: #718078; font-size: .82rem; }
+.budget-total { color: #173b2d; font-family: 'DM Mono', monospace; font-size: 1.05rem; white-space: nowrap; }
+.card-arrow { position: absolute; right: 1.25rem; bottom: 1.1rem; color: #b9c8bf; font-size: 19px; }
+.fab { position: fixed; right: 1.25rem; bottom: 1.25rem; box-shadow: 0 10px 24px rgba(23,59,45,.25); }
+.detail-layout, .page-card { display: grid; gap: 1rem; }
+.back-link { width: fit-content; padding-left: 0 !important; color: #607168 !important; }
+.balance-card { overflow: hidden; background: linear-gradient(135deg, #173b2d, #285b46) !important; color: #f6f7f2; }
+.balance-card mat-card-header { padding: 1.5rem 1.5rem .5rem; }
+.detail-heading mat-card-title { margin-top: .5rem; color: #fff; font-size: clamp(1.5rem, 5vw, 2.3rem); letter-spacing: -.05em; }
+.balance-card .eyebrow { color: #a8d1b9; }
+.balance-card mat-card-content { padding: .8rem 1.5rem 1.5rem; }
+.balance-label { color: #a8d1b9; }
+.balance { margin: .35rem 0 1.5rem; font-family: 'DM Mono', monospace; font-size: clamp(2.2rem, 8vw, 4rem); letter-spacing: -.08em; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+.actions .mat-mdc-button-base { min-height: 42px; }
+.balance-card .actions a:first-child { background: #e6ad72; color: #173b2d; }
+.balance-card .actions a:nth-child(2) { color: #fff; border-color: rgba(255,255,255,.35); }
+.balance-card .actions button { color: #d7e8dc; }
+.history-card mat-card-header { padding: 1.35rem 1.35rem .5rem; }
+.history-card mat-card-title { color: #173b2d; font-size: 1.1rem; }
+.history-card mat-list { padding: 0 .7rem .7rem; }
+.form-card { max-width: 560px; width: 100%; justify-self: center; }
+.form-card mat-card-header { padding: 1.6rem 1.6rem .6rem; }
+.form-heading mat-card-title { margin-top: .5rem; color: #173b2d; font-size: 1.8rem; letter-spacing: -.05em; }
+.form-card mat-card-content { padding: .8rem 1.6rem 1.6rem; }
+.form-card form { display: grid; gap: .45rem; }
+.form-card mat-form-field { width: 100%; }
+.optional-label { color: #8a9b90; font-size: .72rem; }
+.submit-button { min-height: 48px; margin-top: .4rem; }
+.error { padding: .8rem 1rem; border-radius: 12px; color: #a23f36; background: #fce9e6; font-size: .85rem; }
+.empty-copy { padding: 0 1rem 1rem; color: #718078; }
+
+@media (min-width: 700px) {
+  .app-main { padding-top: 4rem; }
+  .hero { margin-top: 0; }
+  .empty-state { padding: 5rem 2rem; }
 }

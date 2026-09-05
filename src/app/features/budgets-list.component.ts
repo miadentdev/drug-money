@@ -12,28 +12,32 @@ import { BudgetStore } from '../data-access/budget-store.service';
   template: `
     <section class="list-layout">
       <div class="hero">
+        <p class="eyebrow">Your money, your rules</p>
         <h1>Budgets</h1>
-        <p>Track multiple pockets of money locally, offline, and on device.</p>
+        <p class="hero-copy">Simple pockets for the money you want to keep track of.</p>
       </div>
       @if (budgets().length === 0) {
         <mat-card class="empty-state">
-          <mat-icon>savings</mat-icon>
+          <div class="empty-icon"><mat-icon>◒</mat-icon></div>
           <h2>No budgets yet</h2>
-          <p>Create your first budget to start tracking deposits and withdrawals.</p>
-          <a mat-flat-button color="primary" routerLink="/budgets/new">Create budget</a>
+          <p>Create your first pocket and start building a clearer picture of your spending.</p>
+          <a mat-flat-button color="primary" routerLink="/budgets/new"><mat-icon>+</mat-icon> Create budget</a>
         </mat-card>
       } @else {
         <div class="budget-list">
           @for (budget of budgets(); track budget.id) {
             <a class="budget-card" [routerLink]="['/budgets', budget.id]">
-              <mat-card>
+              <mat-card class="budget-card-surface">
+                <div class="card-accent"></div>
                 <div class="budget-row">
                   <div>
+                    <span class="card-label">Pocket</span>
                     <h2>{{ budget.name }}</h2>
-                    <p>{{ budget.transactionCount }} transaction(s)</p>
+                    <p>{{ budget.transactionCount }} {{ budget.transactionCount === 1 ? 'transaction' : 'transactions' }}</p>
                   </div>
-                  <strong>{{ budget.total / 100 | currency:'EUR':'symbol':'1.2-2' }}</strong>
+                  <strong class="budget-total">{{ budget.total / 100 | currency:'EUR':'symbol':'1.2-2' }}</strong>
                 </div>
+                <mat-icon class="card-arrow">→</mat-icon>
               </mat-card>
             </a>
           }

@@ -13,10 +13,13 @@ import { BudgetStore } from '../data-access/budget-store.service';
   imports: [ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatIconModule, RouterLink],
   template: `
     <section class="page-card">
-      <a mat-button routerLink="/budgets"><mat-icon>arrow_back</mat-icon> Back</a>
-      <mat-card>
+      <a class="back-link" mat-button routerLink="/budgets"><mat-icon>←</mat-icon> Cancel</a>
+      <mat-card class="form-card">
         <mat-card-header>
-          <mat-card-title>{{ title() }}</mat-card-title>
+          <div class="form-heading">
+            <span class="eyebrow">{{ mode() === 'create' ? 'Start fresh' : 'Update your pocket' }}</span>
+            <mat-card-title>{{ title() }}</mat-card-title>
+          </div>
         </mat-card-header>
         <mat-card-content>
           <form [formGroup]="form" (ngSubmit)="submit()">
@@ -28,19 +31,19 @@ import { BudgetStore } from '../data-access/budget-store.service';
               </mat-form-field>
             }
             <mat-form-field appearance="outline">
-              <mat-label>Amount</mat-label>
+              <mat-label>{{ mode() === 'remove' ? 'Amount to withdraw' : 'Starting amount' }}</mat-label>
               <input matInput formControlName="amount" inputmode="decimal" />
               <mat-hint>{{ amountHint() }}</mat-hint>
               <mat-error>Enter a positive amount like 12.50</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
-              <mat-label>Note</mat-label>
+              <mat-label>Note <span class="optional-label">(optional)</span></mat-label>
               <input matInput formControlName="note" />
             </mat-form-field>
             @if (error()) {
               <p class="error">{{ error() }}</p>
             }
-            <button mat-flat-button color="primary" type="submit">{{ actionLabel() }}</button>
+            <button class="submit-button" mat-flat-button color="primary" type="submit"><mat-icon>{{ mode() === 'remove' ? '↙' : '↗' }}</mat-icon> {{ actionLabel() }}</button>
           </form>
         </mat-card-content>
       </mat-card>

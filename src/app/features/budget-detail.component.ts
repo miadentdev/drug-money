@@ -16,23 +16,27 @@ import { firstValueFrom } from 'rxjs';
   template: `
     @if (budget(); as item) {
       <section class="detail-layout">
-        <a mat-button routerLink="/budgets"><mat-icon>arrow_back</mat-icon> Back</a>
-        <mat-card>
+        <a class="back-link" mat-button routerLink="/budgets"><mat-icon>←</mat-icon> All budgets</a>
+        <mat-card class="balance-card">
           <mat-card-header>
-            <mat-card-title>{{ item.name }}</mat-card-title>
+            <div class="detail-heading">
+              <span class="eyebrow">Budget pocket</span>
+              <mat-card-title>{{ item.name }}</mat-card-title>
+            </div>
           </mat-card-header>
           <mat-card-content>
+            <span class="balance-label">Available balance</span>
             <div class="balance">{{ item.total / 100 | currency:'EUR':'symbol':'1.2-2' }}</div>
             <div class="actions">
-              <a mat-flat-button color="primary" [routerLink]="['/budgets', item.id, 'add']">Add money</a>
-              <a mat-stroked-button [routerLink]="['/budgets', item.id, 'remove']">Remove money</a>
-              <button mat-stroked-button type="button" (click)="rename()">Rename</button>
-              <button mat-stroked-button color="warn" type="button" (click)="removeBudget(item.id)">Delete</button>
+              <a mat-flat-button color="primary" [routerLink]="['/budgets', item.id, 'add']"><mat-icon>+</mat-icon> Add money</a>
+              <a mat-stroked-button [routerLink]="['/budgets', item.id, 'remove']"><mat-icon>−</mat-icon> Withdraw</a>
+              <button mat-icon-button type="button" (click)="rename()" aria-label="Rename budget"><mat-icon>✎</mat-icon></button>
+              <button mat-icon-button color="warn" type="button" (click)="removeBudget(item.id)" aria-label="Delete budget"><mat-icon>×</mat-icon></button>
             </div>
           </mat-card-content>
         </mat-card>
-        <mat-card>
-          <mat-card-header><mat-card-title>Transaction history</mat-card-title></mat-card-header>
+        <mat-card class="history-card">
+          <mat-card-header><mat-card-title>Recent activity</mat-card-title></mat-card-header>
           <mat-list>
             @for (tx of transactions(); track tx.id) {
               <mat-list-item>
