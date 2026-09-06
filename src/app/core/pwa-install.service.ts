@@ -9,6 +9,8 @@ interface BeforeInstallPromptEvent extends Event {
 export class PwaInstallService {
   private deferredPrompt: BeforeInstallPromptEvent | null = null;
   readonly canInstall = signal(false);
+  readonly isIos = typeof navigator !== 'undefined' && (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
 
   constructor() {
     if (typeof window !== 'undefined') {

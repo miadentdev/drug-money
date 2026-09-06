@@ -15,9 +15,15 @@ export class InstallationPageComponent {
   readonly completed = output<void>();
   readonly updateRequested = output<void>();
   readonly canInstall = this.installService.canInstall;
+  readonly isIos = this.installService.isIos;
   readonly showRemoveHelp = signal(false);
+  readonly showInstallHelp = signal(false);
 
   async installApp(): Promise<void> {
+    if (this.isIos || !this.canInstall()) {
+      this.showInstallHelp.set(true);
+      return;
+    }
     if (await this.installService.install() === 'accepted') this.complete();
   }
 
