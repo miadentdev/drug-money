@@ -6,7 +6,13 @@
     </a>
     <span class="toolbar-spacer"></span>
     <span class="offline-status"><span class="status-dot"></span> Saved locally</span>
-    <a mat-button routerLink="/install">Install</a>
+    <a
+      mat-button
+      routerLink="/install"
+      routerLinkActive
+      #installLink="routerLinkActive"
+      [hidden]="showInstallPage() || installLink.isActive"
+    >Install</a>
   </mat-toolbar>
   <main class="app-main">
     @if (showInstallPage()) {
