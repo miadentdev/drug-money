@@ -1,0 +1,18 @@
+<section class="installation-page">
+  <mat-card class="installation-card">
+    <span class="eyebrow">A calmer way to track money</span>
+    <h1>Install Drug Money</h1>
+    <p>Keep your budgets close, available offline, and saved locally on this device.</p>
+    <button mat-flat-button color="primary" type="button" (click)="installApp()">
+      Install Drug Money
+    </button>
+    @if (!canInstall()) {
+      <p class="installation-hint">Your browser has not offered installation yet. You can continue and install later from the browser menu.</p>
+    }
+    <button mat-button type="button" routerLink="/budgets" (click)="continueWithoutInstall()">Continue to budgets</button>
+    <button mat-stroked-button type="button" (click)="removeInstallation()">Remove installation</button>
+    @if (showRemoveHelp()) {
+      <p class="installation-hint">Drug Money cannot uninstall itself. Remove it from Chrome's Installed apps menu or your operating system's app settings.</p>
+    }
+  </mat-card>
+</section>

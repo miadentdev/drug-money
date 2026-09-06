@@ -16,13 +16,14 @@ export class PwaInstallService {
     }
   }
 
-  async install(): Promise<void> {
+  async install(): Promise<'accepted' | 'dismissed' | null> {
     const prompt = this.deferredPrompt;
-    if (!prompt) return;
+    if (!prompt) return null;
 
     this.clearPrompt();
     await prompt.prompt();
-    await prompt.userChoice;
+    const choice = await prompt.userChoice;
+    return choice.outcome;
   }
 
   reset(): void {
