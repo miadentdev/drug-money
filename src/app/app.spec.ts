@@ -15,7 +15,7 @@ describe('App', () => {
         { provide: SwUpdate, useValue: { isEnabled: false } },
         { provide: MatDialog, useValue: {} },
         { provide: BudgetStore, useValue: { resetAppState: async () => undefined } },
-        { provide: PwaInstallService, useValue: { canInstall: () => false, install: async () => undefined, reset: () => undefined } },
+        { provide: PwaInstallService, useValue: { canInstall: () => false, isIos: false, isInstalled: () => false, showInstallAction: () => false, install: async () => null, reset: () => undefined } },
       ],
     }).compileComponents();
   });

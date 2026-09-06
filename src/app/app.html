@@ -11,7 +11,7 @@
       routerLink="/install"
       routerLinkActive
       #installLink="routerLinkActive"
-      [hidden]="showInstallPage() || installLink.isActive"
+      [hidden]="showInstallPage() || installLink.isActive || !install.showInstallAction()"
     >Install</a>
   </mat-toolbar>
   <main class="app-main">

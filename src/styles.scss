@@ -181,6 +181,60 @@ mat-icon {
 .installation-card .installation-hint + button {
   margin-top: 0.5rem;
 }
+.ios-install-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 0.5rem;
+  border-radius: 18px;
+  color: var(--green-ink);
+  background: #f7e8d8;
+}
+.ios-install-icon mat-icon {
+  width: 28px;
+  height: 28px;
+  font-size: 28px;
+}
+.ios-install-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+.ios-dialog-lead,
+.ios-dialog-note {
+  color: #607168;
+  line-height: 1.55;
+}
+.ios-install-steps {
+  display: grid;
+  gap: 0.8rem;
+  margin: 1.25rem 0;
+  padding: 0;
+  list-style: none;
+}
+.ios-install-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--green-ink);
+}
+.ios-install-steps li span {
+  display: grid;
+  flex: 0 0 28px;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--green-ink);
+  background: var(--orange-light);
+  font-weight: 800;
+}
 .hero {
   margin: 1rem 0 2.2rem;
 }

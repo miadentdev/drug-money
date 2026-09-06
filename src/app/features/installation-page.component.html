@@ -3,13 +3,13 @@
     <span class="eyebrow">A calmer way to track money</span>
     <h1>Install Drug Money</h1>
     <p>Keep your budgets close, available offline, and saved locally on this device.</p>
-    <button mat-flat-button color="primary" type="button" (click)="installApp()">
-      {{ isIos ? 'How to install' : 'Install Drug Money' }}
-    </button>
+    @if (showInstallAction()) {
+      <button mat-flat-button color="primary" type="button" (click)="installApp()">
+        {{ isIos ? 'Add to Home Screen' : 'Install Drug Money' }}
+      </button>
+    }
     <button mat-stroked-button type="button" (click)="updateApp()">Update</button>
-    @if (isIos || showInstallHelp()) {
-      <p class="installation-hint">On your iPhone or iPad, tap Share, then choose Add to Home Screen to install Drug Money.</p>
-    } @else if (!canInstall()) {
+    @if (!isIos && !canInstall()) {
       <p class="installation-hint">Your browser has not offered installation yet. You can continue and install later from the browser menu.</p>
     }
     <button mat-button type="button" routerLink="/budgets" (click)="continueWithoutInstall()">Continue to budgets</button>

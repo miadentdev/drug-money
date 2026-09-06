@@ -1,8 +1,10 @@
 import { Component, inject, output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
 import { PwaInstallService } from '../core/pwa-install.service';
+import { IosInstallDialogComponent } from './ios-install-dialog.component';
 
 @Component({
   selector: 'app-installation-page',
@@ -12,15 +14,21 @@ import { PwaInstallService } from '../core/pwa-install.service';
 })
 export class InstallationPageComponent {
   private readonly installService = inject(PwaInstallService);
+  private readonly dialog = inject(MatDialog);
   readonly completed = output<void>();
   readonly updateRequested = output<void>();
   readonly canInstall = this.installService.canInstall;
   readonly isIos = this.installService.isIos;
+  readonly showInstallAction = this.installService.showInstallAction;
   readonly showRemoveHelp = signal(false);
   readonly showInstallHelp = signal(false);
 
   async installApp(): Promise<void> {
-    if (this.isIos || !this.canInstall()) {
+    if (this.isIos) {
+      this.dialog.open(IosInstallDialogComponent, { width: 'min(92vw, 380px)' });
+      return;
+    }
+    if (!this.canInstall()) {
       this.showInstallHelp.set(true);
       return;
     }
