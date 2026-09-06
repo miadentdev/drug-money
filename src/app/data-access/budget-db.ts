@@ -12,6 +12,13 @@ export class BudgetDatabase extends Dexie {
       transactions: 'id, budgetId, createdAt, type',
     });
   }
+
+  async resetAppState(): Promise<void> {
+    await this.transaction('rw', this.budgets, this.transactions, async () => {
+      await this.transactions.clear();
+      await this.budgets.clear();
+    });
+  }
 }
 
 export const budgetDb = new BudgetDatabase();

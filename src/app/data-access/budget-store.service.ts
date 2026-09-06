@@ -24,6 +24,7 @@ export interface BudgetDatabaseLike {
     add(transaction: BudgetTransaction): Promise<string>;
   };
   transaction<T>(mode: 'rw', ...args: unknown[]): Promise<T>;
+  resetAppState(): Promise<void>;
 }
 
 export const BUDGET_DB = new InjectionToken<BudgetDatabaseLike>('BUDGET_DB');
@@ -87,6 +88,10 @@ export class BudgetStore {
       this.db.transactions.toArray(),
     ]);
     return { budgets, transactions };
+  }
+
+  async resetAppState(): Promise<void> {
+    await this.db.resetAppState();
   }
 
   async createBudget(name: string, initialAmountText?: string) {

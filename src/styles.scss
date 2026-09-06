@@ -337,7 +337,9 @@ mat-icon svg {
   min-height: 48px;
   margin-top: 0.4rem;
 }
-.update-button {
+.update-button,
+.install-button,
+.developer-button {
   min-height: 40px;
 }
 .error {

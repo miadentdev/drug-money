@@ -96,4 +96,18 @@ describe.skipIf(!hasIndexedDb)('BudgetStore', () => {
     expect(await db.budgets.get(id)).toBeUndefined();
     expect(await db.transactions.where('budgetId').equals(id).count()).toBe(0);
   });
+
+  it('resets all budgets, transactions, and orphaned transaction data', async () => {
+    const firstId = await store.createBudget('Food', '12');
+    await store.addMoney(firstId, '3');
+    const secondId = await store.createBudget('Travel', '25');
+    await store.addMoney(secondId, '5');
+
+    await store.resetAppState();
+
+    expect(await db.budgets.count()).toBe(0);
+    expect(await db.transactions.count()).toBe(0);
+    expect(await db.transactions.where('budgetId').equals(firstId).count()).toBe(0);
+    expect(await db.transactions.where('budgetId').equals(secondId).count()).toBe(0);
+  });
 });
