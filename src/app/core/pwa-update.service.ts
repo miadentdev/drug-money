@@ -27,6 +27,7 @@ export class PwaUpdateService {
     this.state.set('checking');
     this.snackBar.open('Checking for updates...', undefined, { duration: 1800 });
     try {
+      await this.clearAppCaches();
       const available = await this.swUpdate.checkForUpdate();
       if (this.state() === 'checking') {
         this.state.set(available ? 'available' : 'idle');
@@ -77,5 +78,26 @@ export class PwaUpdateService {
     sessionStorage.removeItem(this.successKey);
     this.state.set('success');
     this.snackBar.open('Drug Money was updated successfully.', undefined, { duration: 3500 });
+  }
+
+  private async clearAppCaches(): Promise<void> {
+    if (typeof window === 'undefined' || !('caches' in window) ||
+      typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return;
+
+    try {
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (!registration) return;
+
+      const scopePath = new URL(registration.scope).pathname;
+      const cachePrefix = `ngsw:${scopePath}`;
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames
+          .filter((cacheName) => cacheName.startsWith(cachePrefix))
+          .map((cacheName) => caches.delete(cacheName)),
+      );
+    } catch (error) {
+      console.error('Unable to clear the Drug Money service-worker cache', error);
+    }
   }
 }

@@ -28,9 +28,6 @@
         }
       }
     }
-    @if (!isIos && !canInstall()) {
-      <p class="installation-hint">Your browser has not offered installation yet. You can continue and install later from the browser menu.</p>
-    }
     <button mat-button type="button" routerLink="/budgets" (click)="continueWithoutInstall()">Continue to budgets</button>
     <button mat-stroked-button type="button" (click)="removeInstallation()">Remove installation</button>
     @if (showRemoveHelp()) {

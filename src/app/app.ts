@@ -25,7 +25,7 @@ export class App {
   private readonly router = inject(Router);
   private readonly pwaUpdate = inject(PwaUpdateService);
   readonly install = inject(PwaInstallService);
-  readonly showInstallPage = signal(!this.hasCompletedInstallPage());
+  readonly showInstallPage = signal(!this.install.isInstalled() && !this.hasCompletedInstallPage());
 
   async installApp(): Promise<void> {
     if (await this.install.install() === 'accepted') this.continueToApp();

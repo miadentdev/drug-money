@@ -22,17 +22,13 @@ export class InstallationPageComponent {
   readonly isIos = this.installService.isIos;
   readonly showInstallAction = this.installService.showInstallAction;
   readonly showRemoveHelp = signal(false);
-  readonly showInstallHelp = signal(false);
 
   async installApp(): Promise<void> {
     if (this.isIos) {
       this.dialog.open(IosInstallDialogComponent, { width: 'min(92vw, 380px)' });
       return;
     }
-    if (!this.canInstall()) {
-      this.showInstallHelp.set(true);
-      return;
-    }
+    if (!this.canInstall()) return;
     if (await this.installService.install() === 'accepted') this.complete();
   }
 
