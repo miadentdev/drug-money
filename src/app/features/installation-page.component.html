@@ -8,7 +8,26 @@
         {{ isIos ? 'Add to Home Screen' : 'Install Drug Money' }}
       </button>
     }
-    <button mat-stroked-button type="button" (click)="updateApp()">Update</button>
+    @if (pwaUpdate.isEnabled) {
+      @switch (pwaUpdate.state()) {
+        @case ('available') {
+          <div class="update-panel" role="status">
+            <strong>New Version Available</strong>
+            <span>Update Drug Money to get the latest version.</span>
+            <button mat-flat-button color="primary" type="button" (click)="pwaUpdate.update()">Update app</button>
+          </div>
+        }
+        @case ('checking') {
+          <button mat-stroked-button type="button" disabled>Checking for updates...</button>
+        }
+        @case ('updating') {
+          <button mat-stroked-button type="button" disabled>Updating Drug Money...</button>
+        }
+        @default {
+          <button mat-stroked-button type="button" (click)="pwaUpdate.checkForUpdates()">Check for updates</button>
+        }
+      }
+    }
     @if (!isIos && !canInstall()) {
       <p class="installation-hint">Your browser has not offered installation yet. You can continue and install later from the browser menu.</p>
     }

@@ -5,6 +5,7 @@ import { SwUpdate } from '@angular/service-worker';
 import { MatDialog } from '@angular/material/dialog';
 import { BudgetStore } from './data-access/budget-store.service';
 import { PwaInstallService } from './core/pwa-install.service';
+import { PwaUpdateService } from './core/pwa-update.service';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -16,6 +17,7 @@ describe('App', () => {
         { provide: MatDialog, useValue: {} },
         { provide: BudgetStore, useValue: { resetAppState: async () => undefined } },
         { provide: PwaInstallService, useValue: { canInstall: () => false, isIos: false, isInstalled: () => false, showInstallAction: () => false, install: async () => null, reset: () => undefined } },
+        { provide: PwaUpdateService, useValue: { isEnabled: false, state: () => 'idle', checkForUpdates: async () => undefined, update: async () => undefined } },
       ],
     }).compileComponents();
   });

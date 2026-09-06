@@ -181,6 +181,21 @@ mat-icon {
 .installation-card .installation-hint + button {
   margin-top: 0.5rem;
 }
+.update-panel {
+  display: grid;
+  gap: 0.45rem;
+  width: min(100%, 26rem);
+  margin: 0.75rem auto;
+  padding: 1rem;
+  border: 1px solid rgba(183, 107, 54, 0.3);
+  border-radius: 18px;
+  color: var(--green-ink);
+  background: var(--orange-wash);
+}
+.update-panel span {
+  color: #607168;
+  font-size: 0.85rem;
+}
 .ios-install-icon {
   display: grid;
   place-items: center;

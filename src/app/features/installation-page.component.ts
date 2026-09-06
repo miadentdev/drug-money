@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
 import { PwaInstallService } from '../core/pwa-install.service';
 import { IosInstallDialogComponent } from './ios-install-dialog.component';
+import { PwaUpdateService } from '../core/pwa-update.service';
 
 @Component({
   selector: 'app-installation-page',
@@ -15,8 +16,8 @@ import { IosInstallDialogComponent } from './ios-install-dialog.component';
 export class InstallationPageComponent {
   private readonly installService = inject(PwaInstallService);
   private readonly dialog = inject(MatDialog);
+  readonly pwaUpdate = inject(PwaUpdateService);
   readonly completed = output<void>();
-  readonly updateRequested = output<void>();
   readonly canInstall = this.installService.canInstall;
   readonly isIos = this.installService.isIos;
   readonly showInstallAction = this.installService.showInstallAction;
@@ -41,10 +42,6 @@ export class InstallationPageComponent {
 
   removeInstallation(): void {
     this.showRemoveHelp.set(true);
-  }
-
-  updateApp(): void {
-    this.updateRequested.emit();
   }
 
   private complete(): void {

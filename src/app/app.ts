@@ -3,26 +3,27 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { SwUpdate } from '@angular/service-worker';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
 import { BudgetStore } from './data-access/budget-store.service';
 import { ConfirmDialogComponent } from './shared/confirm-dialog.component';
 import { PwaInstallService } from './core/pwa-install.service';
 import { InstallationPageComponent } from './features/installation-page.component';
+import { PwaUpdateService } from './core/pwa-update.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, MatToolbarModule, MatIconModule, MatButtonModule, InstallationPageComponent],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, MatToolbarModule, MatIconModule, MatButtonModule, MatSnackBarModule, InstallationPageComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  private readonly swUpdate = inject(SwUpdate);
   private readonly dialog = inject(MatDialog);
   private readonly store = inject(BudgetStore);
   private readonly router = inject(Router);
+  private readonly pwaUpdate = inject(PwaUpdateService);
   readonly install = inject(PwaInstallService);
   readonly showInstallPage = signal(!this.hasCompletedInstallPage());
 
@@ -58,17 +59,4 @@ export class App {
     return typeof window !== 'undefined' && window.localStorage.getItem('drug-money-install-page-seen') === 'true';
   }
 
-  async updateCache(): Promise<void> {
-    if (!this.swUpdate.isEnabled) {
-      window.location.reload();
-      return;
-    }
-
-    try {
-      await this.swUpdate.checkForUpdate();
-      await this.swUpdate.activateUpdate();
-    } finally {
-      window.location.reload();
-    }
-  }
 }
