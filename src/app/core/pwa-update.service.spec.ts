@@ -23,7 +23,7 @@ describe('PwaUpdateService', () => {
 
     expect(check).not.toHaveBeenCalled();
     expect(service.state()).toBe('idle');
-    expect(snackBar.open).not.toHaveBeenCalled();
+    expect(snackBar.open).toHaveBeenCalledWith("You're already up to date.", undefined, { duration: 3000 });
   });
 
   it('reports that the app is current when no update is found', async () => {
