@@ -23,7 +23,7 @@ export class App {
   private readonly dialog = inject(MatDialog);
   private readonly store = inject(BudgetStore);
   private readonly router = inject(Router);
-  private readonly pwaUpdate = inject(PwaUpdateService);
+  readonly pwaUpdate = inject(PwaUpdateService);
   readonly install = inject(PwaInstallService);
   readonly showInstallPage = signal(!this.install.isInstalled() && !this.hasCompletedInstallPage());
 

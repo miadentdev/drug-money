@@ -8,7 +8,7 @@
         {{ isIos ? 'Add to Home Screen' : 'Install Drug Money' }}
       </button>
     }
-    @if (pwaUpdate.isEnabled) {
+    @if (!isIos) {
       @switch (pwaUpdate.state()) {
         @case ('available') {
           <div class="update-panel" role="status">

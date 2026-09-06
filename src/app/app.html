@@ -6,6 +6,22 @@
     </a>
     <span class="toolbar-spacer"></span>
     <span class="offline-status"><span class="status-dot"></span> Saved locally</span>
+    @if (!showInstallPage() && !installLink.isActive && !install.isIos) {
+      @switch (pwaUpdate.state()) {
+        @case ('available') {
+          <button mat-flat-button color="primary" type="button" (click)="pwaUpdate.update()">New Version Available</button>
+        }
+        @case ('checking') {
+          <button mat-stroked-button type="button" disabled>Checking for updates...</button>
+        }
+        @case ('updating') {
+          <button mat-stroked-button type="button" disabled>Updating Drug Money...</button>
+        }
+        @default {
+          <button mat-stroked-button type="button" (click)="pwaUpdate.checkForUpdates()">Check for updates</button>
+        }
+      }
+    }
     <a
       mat-button
       routerLink="/install"

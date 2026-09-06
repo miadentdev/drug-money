@@ -22,7 +22,10 @@ export class PwaUpdateService {
   }
 
   async checkForUpdates(): Promise<void> {
-    if (!this.isEnabled || this.state() === 'checking' || this.state() === 'updating') return;
+    if (!this.isEnabled) {
+      return;
+    }
+    if (this.state() === 'checking' || this.state() === 'updating') return;
 
     this.state.set('checking');
     this.snackBar.open('Checking for updates...', undefined, { duration: 1800 });
