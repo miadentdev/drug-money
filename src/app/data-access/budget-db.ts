@@ -5,8 +5,8 @@ export class BudgetDatabase extends Dexie {
   budgets!: Table<Budget, string>;
   transactions!: Table<BudgetTransaction, string>;
 
-  constructor() {
-    super('drug-money-db');
+  constructor(name = 'drug-money-db') {
+    super(name);
     this.version(1).stores({
       budgets: 'id, createdAt, updatedAt, name',
       transactions: 'id, budgetId, createdAt, type',

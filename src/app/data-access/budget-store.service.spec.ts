@@ -1,86 +1,27 @@
 import { TestBed } from '@angular/core/testing';
-import { BUDGET_DB, BudgetStore, type BudgetDatabaseLike } from './budget-store.service';
-import type { Budget, BudgetTransaction } from './budget-types';
+import { BUDGET_DB, BudgetStore } from './budget-store.service';
+import { BudgetDatabase } from './budget-db';
 
-function createFakeDb(): BudgetDatabaseLike {
-  const budgets = new Map<string, Budget>();
-  const transactions = new Map<string, BudgetTransaction>();
+const hasIndexedDb = typeof indexedDB !== 'undefined';
 
-  const budgetTable = {
-    async toArray() {
-      return [...budgets.values()];
-    },
-    async get(id: string) {
-      return budgets.get(id);
-    },
-    async add(budget: Budget) {
-      budgets.set(budget.id, budget);
-      return budget.id;
-    },
-    async update(id: string, changes: Partial<Budget>) {
-      const current = budgets.get(id);
-      if (!current) return 0;
-      budgets.set(id, { ...current, ...changes });
-      return 1;
-    },
-    async delete(id: string) {
-      budgets.delete(id);
-    },
-  };
-
-  const transactionIndex = {
-    equals(value: string) {
-      return {
-        async toArray() {
-          return [...transactions.values()].filter((transaction) => transaction.budgetId === value);
-        },
-        async count() {
-          return [...transactions.values()].filter((transaction) => transaction.budgetId === value).length;
-        },
-        async delete() {
-          for (const [id, transaction] of transactions) {
-            if (transaction.budgetId === value) transactions.delete(id);
-          }
-        },
-      };
-    },
-  };
-
-  return {
-    budgets: budgetTable,
-    transactions: {
-      async toArray() {
-        return [...transactions.values()];
-      },
-      where(index: 'budgetId') {
-        return index === 'budgetId' ? transactionIndex : transactionIndex;
-      },
-      async add(transaction: BudgetTransaction) {
-        transactions.set(transaction.id, transaction);
-        return transaction.id;
-      },
-    },
-    async transaction(_mode: 'rw', ..._tables: unknown[]) {
-      const callback = _tables[_tables.length - 1] as (() => Promise<unknown>) | undefined;
-      if (!callback) throw new Error('Missing transaction callback');
-      return callback() as Promise<any>;
-    },
-  };
-}
-
-describe('BudgetStore', () => {
+describe.skipIf(!hasIndexedDb)('BudgetStore', () => {
+  let db: BudgetDatabase;
   let store: BudgetStore;
 
-  beforeEach(async () => {
+  beforeEach(() => {
+    db = new BudgetDatabase(`drug-money-test-${crypto.randomUUID()}`);
     TestBed.configureTestingModule({
-      providers: [{ provide: BUDGET_DB, useFactory: createFakeDb }, BudgetStore],
+      providers: [{ provide: BUDGET_DB, useValue: db }, BudgetStore],
     });
     store = TestBed.inject(BudgetStore);
   });
 
+  afterEach(async () => {
+    await db.delete();
+  });
+
   it('creates a budget with an initial deposit', async () => {
     const id = await store.createBudget('Household', '10.25');
-    const db = (store as any).db as BudgetDatabaseLike;
     const budget = await db.budgets.get(id);
     const transactions = await db.transactions.where('budgetId').equals(id).toArray();
     expect(budget?.total).toBe(1025);
@@ -92,34 +33,66 @@ describe('BudgetStore', () => {
     const id = await store.createBudget('Trips');
     await store.addMoney(id, '20');
     await store.removeMoney(id, '7.50');
-    const db = (store as any).db as BudgetDatabaseLike;
-    const budget = await db.budgets.get(id);
-    const transactions = await db.transactions.where('budgetId').equals(id).toArray();
-    expect(budget?.total).toBe(1250);
-    expect(transactions).toHaveLength(2);
+    expect((await db.budgets.get(id))?.total).toBe(1250);
+    expect(await db.transactions.where('budgetId').equals(id).count()).toBe(2);
+  });
+
+  it('rolls back a failed deposit without changing the balance or adding a transaction', async () => {
+    const id = await store.createBudget('Pocket', '5');
+    const originalAdd = db.transactions.add.bind(db.transactions);
+    (db.transactions as any).add = async () => {
+      throw new Error('write failed');
+    };
+
+    await expect(store.addMoney(id, '2')).rejects.toThrow('write failed');
+    (db.transactions as any).add = originalAdd;
+
+    expect((await db.budgets.get(id))?.total).toBe(500);
+    expect(await db.transactions.where('budgetId').equals(id).count()).toBe(1);
+  });
+
+  it('rolls back a failed withdrawal without changing the balance or adding a transaction', async () => {
+    const id = await store.createBudget('Pocket', '5');
+    const originalAdd = db.transactions.add.bind(db.transactions);
+    (db.transactions as any).add = async () => {
+      throw new Error('write failed');
+    };
+
+    await expect(store.removeMoney(id, '2')).rejects.toThrow('write failed');
+    (db.transactions as any).add = originalAdd;
+
+    expect((await db.budgets.get(id))?.total).toBe(500);
+    expect(await db.transactions.where('budgetId').equals(id).count()).toBe(1);
+  });
+
+  it('rolls back a failed budget deletion without removing either table record', async () => {
+    const id = await store.createBudget('Food', '12');
+    await store.addMoney(id, '3');
+    const originalDelete = db.budgets.delete.bind(db.budgets);
+    (db.budgets as any).delete = async () => {
+      throw new Error('delete failed');
+    };
+
+    await expect(store.deleteBudget(id)).rejects.toThrow('delete failed');
+    (db.budgets as any).delete = originalDelete;
+
+    expect(await db.budgets.get(id)).toBeDefined();
+    expect(await db.transactions.where('budgetId').equals(id).count()).toBe(2);
   });
 
   it('prevents withdrawals above the balance', async () => {
     const id = await store.createBudget('Pocket', '5');
-    let error: unknown;
-    try {
-      await store.removeMoney(id, '10');
-    } catch (caught) {
-      error = caught;
-    }
-    expect(error instanceof Error ? error.message : '').toBe('Withdrawal exceeds available balance');
-    const db = (store as any).db as BudgetDatabaseLike;
-    const budget = await db.budgets.get(id);
-    const transactions = await db.transactions.where('budgetId').equals(id).toArray();
-    expect(budget?.total).toBe(500);
-    expect(transactions).toHaveLength(1);
+    await expect(store.removeMoney(id, '10')).rejects.toThrow(
+      'Withdrawal exceeds available balance',
+    );
+    expect((await db.budgets.get(id))?.total).toBe(500);
+    expect(await db.transactions.where('budgetId').equals(id).count()).toBe(1);
   });
 
   it('deletes a budget and its transactions together', async () => {
     const id = await store.createBudget('Food', '12');
     await store.addMoney(id, '3');
     await store.deleteBudget(id);
-    const db = (store as any).db as BudgetDatabaseLike;
     expect(await db.budgets.get(id)).toBeUndefined();
     expect(await db.transactions.where('budgetId').equals(id).count()).toBe(0);
   });

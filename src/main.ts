@@ -4,7 +4,3 @@ import { App } from './app/app';
 
 bootstrapApplication(App, appConfig)
   .catch((err) => console.error(err));
-
-if ('storage' in navigator && 'persist' in navigator.storage) {
-  void navigator.storage.persist();
-}

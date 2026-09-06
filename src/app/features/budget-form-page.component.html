@@ -1,0 +1,41 @@
+<section class="page-card">
+  <a class="back-link" mat-button routerLink="/budgets">
+    <mat-icon aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m14.7 5.3-1.4-1.4-7.7 8.1 7.7 8.1 1.4-1.4-6.4-6.7 6.4-6.7Z" /></svg></mat-icon>
+    Cancel
+  </a>
+  <mat-card class="form-card">
+    <mat-card-header>
+      <div class="form-heading">
+        <span class="eyebrow">{{ mode() === 'create' ? 'Start fresh' : 'Update your pocket' }}</span>
+        <mat-card-title>{{ title() }}</mat-card-title>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        @if (mode() === 'create') {
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" />
+            @if (form.controls.name.hasError('required')) { <mat-error>Name is required</mat-error> }
+          </mat-form-field>
+        }
+        <mat-form-field appearance="outline">
+          <mat-label>{{ mode() === 'remove' ? 'Amount to withdraw' : 'Starting amount' }}</mat-label>
+          <input matInput formControlName="amount" inputmode="decimal" />
+          <mat-hint>{{ amountHint() }}</mat-hint>
+          @if (form.controls.amount.hasError('required')) { <mat-error>Amount is required</mat-error> }
+          @else if (form.controls.amount.hasError('amount')) { <mat-error>Enter a positive amount with up to two decimals</mat-error> }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Note <span class="optional-label">(optional)</span></mat-label>
+          <input matInput formControlName="note" />
+        </mat-form-field>
+        @if (error()) { <p class="error">{{ error() }}</p> }
+        <button class="submit-button" mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+          <mat-icon aria-hidden="true"><svg viewBox="0 0 24 24"><path [attr.d]="mode() === 'remove' ? 'M5 11h14v2H5v-2Z' : 'M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z'" /></svg></mat-icon>
+          {{ actionLabel() }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>

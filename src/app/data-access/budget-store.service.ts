@@ -43,26 +43,33 @@ function centsFromAmountInput(value: string): number | null {
 export class BudgetStore {
   private readonly db = inject(BUDGET_DB);
   readonly budgets = toSignal(
-    from(liveQuery(() => this.db.budgets.toArray())).pipe(map((budgets) => budgets.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)))),
+    from(liveQuery(() => this.db.budgets.toArray())).pipe(
+      map((budgets) => budgets.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))),
+    ),
     { initialValue: [] as Budget[] },
   );
   readonly summaries = toSignal(
-    from(liveQuery(async () => {
-      const [budgets, transactions] = await Promise.all([
-        this.db.budgets.toArray(),
-        this.db.transactions.toArray(),
-      ]);
-      const counts = new Map<string, number>();
-      for (const transaction of transactions) counts.set(transaction.budgetId, (counts.get(transaction.budgetId) ?? 0) + 1);
-      return budgets
-        .map((budget) => ({ ...budget, transactionCount: counts.get(budget.id) ?? 0 }))
-        .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
-    })),
+    from(
+      liveQuery(async () => {
+        const [budgets, transactions] = await Promise.all([
+          this.db.budgets.toArray(),
+          this.db.transactions.toArray(),
+        ]);
+        const counts = new Map<string, number>();
+        for (const transaction of transactions)
+          counts.set(transaction.budgetId, (counts.get(transaction.budgetId) ?? 0) + 1);
+        return budgets
+          .map((budget) => ({ ...budget, transactionCount: counts.get(budget.id) ?? 0 }))
+          .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+      }),
+    ),
     { initialValue: [] as BudgetSummary[] },
   );
 
   budget(id: string) {
-    return toSignal(from(liveQuery(() => this.db.budgets.get(id))), { initialValue: undefined as Budget | undefined });
+    return toSignal(from(liveQuery(() => this.db.budgets.get(id))), {
+      initialValue: undefined as Budget | undefined,
+    });
   }
 
   transactionsFor(id: string) {
@@ -83,6 +90,7 @@ export class BudgetStore {
   }
 
   async createBudget(name: string, initialAmountText?: string) {
+    if (!name.trim()) throw new Error('Name is required');
     const trimmedAmount = initialAmountText?.trim() ?? '';
     const parsedInitialCents = trimmedAmount ? centsFromAmountInput(trimmedAmount) : 0;
     if (parsedInitialCents === null) throw new Error('Invalid amount');

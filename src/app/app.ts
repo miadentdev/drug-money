@@ -1,26 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { SwUpdate } from '@angular/service-worker';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterLink, RouterOutlet, MatToolbarModule, MatIconModule],
-  template: `
-    <div class="app-shell">
-      <mat-toolbar class="app-toolbar">
-        <a class="brand" routerLink="/budgets" aria-label="Drug Money home">
-          <span class="brand-mark"><mat-icon aria-hidden="true">[]</mat-icon></span>
-          <span class="brand-name">Drug Money</span>
-        </a>
-        <span class="toolbar-spacer"></span>
-        <span class="offline-status"><span class="status-dot"></span> Saved on device</span>
-      </mat-toolbar>
-      <main class="app-main">
-        <router-outlet />
-      </main>
-    </div>
-  `,
+  imports: [RouterLink, RouterOutlet, MatToolbarModule, MatIconModule, MatButtonModule],
+  templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {}
+export class App {
+  private readonly swUpdate = inject(SwUpdate);
+
+  async updateCache(): Promise<void> {
+    if (!this.swUpdate.isEnabled) {
+      window.location.reload();
+      return;
+    }
+
+    try {
+      await this.swUpdate.checkForUpdate();
+      await this.swUpdate.activateUpdate();
+    } finally {
+      window.location.reload();
+    }
+  }
+}
