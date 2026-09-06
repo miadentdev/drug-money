@@ -6,6 +6,7 @@
     <button mat-flat-button color="primary" type="button" (click)="installApp()">
       Install Drug Money
     </button>
+    <button mat-stroked-button type="button" (click)="updateApp()">Update</button>
     @if (!canInstall()) {
       <p class="installation-hint">Your browser has not offered installation yet. You can continue and install later from the browser menu.</p>
     }

@@ -10,7 +10,7 @@
   </mat-toolbar>
   <main class="app-main">
     @if (showInstallPage()) {
-      <app-installation-page (completed)="continueToApp()" />
+      <app-installation-page (completed)="continueToApp()" (updateRequested)="updateCache()" />
     } @else {
       <router-outlet />
     }

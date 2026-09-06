@@ -25,6 +25,22 @@ input {
   font: inherit;
 }
 
+.mat-mdc-button-base {
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.mat-mdc-button-base:not(:disabled):not(.mat-mdc-button-disabled):active {
+  transform: translateY(2px) scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mat-mdc-button-base {
+    transition: none;
+  }
+}
+
 mat-icon {
   font-weight: 700;
 }

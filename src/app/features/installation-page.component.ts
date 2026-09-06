@@ -13,6 +13,7 @@ import { PwaInstallService } from '../core/pwa-install.service';
 export class InstallationPageComponent {
   private readonly installService = inject(PwaInstallService);
   readonly completed = output<void>();
+  readonly updateRequested = output<void>();
   readonly canInstall = this.installService.canInstall;
   readonly showRemoveHelp = signal(false);
 
@@ -26,6 +27,10 @@ export class InstallationPageComponent {
 
   removeInstallation(): void {
     this.showRemoveHelp.set(true);
+  }
+
+  updateApp(): void {
+    this.updateRequested.emit();
   }
 
   private complete(): void {
