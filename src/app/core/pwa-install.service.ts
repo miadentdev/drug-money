@@ -1,4 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
+import { AppContextService } from './app-context.service';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -11,10 +12,12 @@ export class PwaInstallService {
   readonly canInstall = signal(false);
   readonly isIos = typeof navigator !== 'undefined' && (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
-  readonly isInstalled = signal(this.detectStandaloneMode());
+  readonly isInstalled = signal(false);
   readonly showInstallAction = computed(() => !this.isInstalled() && (this.isIos || this.canInstall()));
 
-  constructor() {
+  constructor(appContext: AppContextService) {
+    this.isInstalled.set(appContext.isStandalone());
+
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeinstallprompt', this.capturePrompt);
     }
@@ -46,11 +49,4 @@ export class PwaInstallService {
     this.canInstall.set(false);
   }
 
-  private detectStandaloneMode(): boolean {
-    if (typeof window === 'undefined') return false;
-    const displayModeStandalone = typeof window.matchMedia === 'function' &&
-      window.matchMedia('(display-mode: standalone)').matches;
-    return displayModeStandalone ||
-      (typeof navigator !== 'undefined' && (navigator as Navigator & { standalone?: boolean }).standalone === true);
-  }
 }

@@ -6,7 +6,7 @@
     </a>
     <span class="toolbar-spacer"></span>
     <span class="offline-status"><span class="status-dot"></span> Saved locally</span>
-    @if (!showInstallPage() && !installLink.isActive && !install.isIos) {
+    @if (!installLink.isActive && !install.isIos) {
       @switch (pwaUpdate.state()) {
         @case ('available') {
           <button mat-flat-button color="primary" type="button" (click)="pwaUpdate.update()">New Version Available</button>
@@ -27,14 +27,10 @@
       routerLink="/install"
       routerLinkActive
       #installLink="routerLinkActive"
-      [hidden]="showInstallPage() || installLink.isActive || !install.showInstallAction()"
+      [hidden]="installLink.isActive || !install.showInstallAction()"
     >Install</a>
   </mat-toolbar>
   <main class="app-main">
-    @if (showInstallPage()) {
-      <app-installation-page (completed)="continueToApp()" />
-    } @else {
-      <router-outlet />
-    }
+    <router-outlet />
   </main>
 </div>

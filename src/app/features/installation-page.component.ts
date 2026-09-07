@@ -2,7 +2,6 @@ import { Component, inject, output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-import { RouterLink } from '@angular/router';
 import { PwaInstallService } from '../core/pwa-install.service';
 import { IosInstallDialogComponent } from './ios-install-dialog.component';
 import { PwaUpdateService } from '../core/pwa-update.service';
@@ -10,7 +9,7 @@ import { PwaUpdateService } from '../core/pwa-update.service';
 @Component({
   selector: 'app-installation-page',
   standalone: true,
-  imports: [MatButtonModule, MatCardModule, RouterLink],
+  imports: [MatButtonModule, MatCardModule],
   templateUrl: './installation-page.component.html',
 })
 export class InstallationPageComponent {
@@ -30,10 +29,6 @@ export class InstallationPageComponent {
     }
     if (!this.canInstall()) return;
     if (await this.installService.install() === 'accepted') this.complete();
-  }
-
-  continueWithoutInstall(): void {
-    this.complete();
   }
 
   removeInstallation(): void {

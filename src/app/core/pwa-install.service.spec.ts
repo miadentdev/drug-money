@@ -1,8 +1,9 @@
+import { AppContextService } from './app-context.service';
 import { PwaInstallService } from './pwa-install.service';
 
 describe('PwaInstallService', () => {
   it('exposes a fresh beforeinstallprompt event and clears it after install', async () => {
-    const service = new PwaInstallService();
+    const service = new PwaInstallService({ isStandalone: () => false } as AppContextService);
     const prompt = vi.fn(async () => undefined);
     const event = Object.assign(new Event('beforeinstallprompt'), {
       prompt,
@@ -19,7 +20,7 @@ describe('PwaInstallService', () => {
   });
 
   it('resets application-controlled install state without affecting the browser', () => {
-    const service = new PwaInstallService();
+    const service = new PwaInstallService({ isStandalone: () => false } as AppContextService);
     const event = Object.assign(new Event('beforeinstallprompt'), {
       prompt: async () => undefined,
       userChoice: Promise.resolve({ outcome: 'dismissed' as const }),
